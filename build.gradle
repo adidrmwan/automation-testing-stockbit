@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.21"
+    id "io.freefair.lombok" version "5.3.0"
+    id 'se.thinkcode.cucumber-runner' version '0.0.8'
+}
+
+group 'test.automation'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+cucumber {
+    if (this.hasProperty("env")) {
+        System.setProperty("spring.profiles.active", "$env")
+    }
+
+    main = 'io.cucumber.core.cli.Main'
+    glue = 'classpath:test.automation'
+    plugin = ['pretty', "json:build/cucumber.json", "html:build/result"]
+}
+
+cucumberReports {
+    outputDir = file("$projectDir/build/generated-reports")
+    buildId = System.getenv('BUILD_NUMBER').toString()
+    reports = files("$projectDir/build/cucumber.json")
+    trendsLimit = 10
+    testTasksFinalizedByReport = false
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.18'
+
+    //LOMBOK
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    //CUCUMBER + SELENIUM
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '${junitVersion}'
+    implementation group: 'io.cucumber', name: 'cucumber-java', version: '5.4.1'
+    implementation group: 'io.cucumber', name: 'cucumber-junit', version: '5.4.1'
+    implementation group: 'io.appium', name: 'java-client', version: '7.3.0'
+    implementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.2'
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.2.2'
+
+    //GUAVA
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+
+    //REPORTING
+    implementation group: 'net.masterthought', name: 'cucumber-reporting', version: '5.2.2'
+
+    //SPRING
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mustache', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.2.4.RELEASE'
+    implementation group: 'io.cucumber', name: 'cucumber-spring', version: '5.4.1'
+
+    implementation group: 'io.rest-assured', name: 'json-schema-validator', version: '3.0.0'
+
+    implementation group: 'org.testng', name: 'testng', version: '6.14.3'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+
+    implementation group: 'com.github.javafaker', name: 'javafaker', version: '1.0.2'
+}
+
+test {
+    useJUnitPlatform()
+}

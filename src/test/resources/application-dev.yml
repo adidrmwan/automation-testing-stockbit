@@ -1,0 +1,15 @@
+spring:
+  profiles: dev
+
+config:
+  android:
+    appPackage: "com.saucelabs.mydemoapp.android"
+    appActivity: "com.saucelabs.mydemoapp.android.view.activities.SplashActivity"
+    appPath: /APP/apps.apk
+    name: "Sauce Labs Demo"
+  api:
+    baseUri: "https://api.punkapi.com/"
+
+user:
+  username: "bod@example.com"
+  password: "10203040"
